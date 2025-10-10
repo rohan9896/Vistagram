@@ -1,15 +1,27 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/auth/userSlice";
 import {
   useDispatch,
   useSelector,
   type TypedUseSelectorHook,
 } from "react-redux";
+import persistReducer from "redux-persist/es/persistReducer";
+import storageSession from "redux-persist/lib/storage/session";
+
+const persistConfig = {
+  key: `STORE_${import.meta.env.VITE_APP_ENV}`,
+  storage: storageSession,
+};
+
+const reducers = combineReducers({
+  user: userReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
-  reducer: {
-    user: userReducer,
-  },
+  reducer: persistedReducer,
+  devTools: import.meta.env.MODE !== "production",
 });
 
 export type RootState = ReturnType<typeof store.getState>;

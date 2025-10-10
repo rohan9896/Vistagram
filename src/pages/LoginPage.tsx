@@ -24,7 +24,7 @@ import { MdLocationOn, MdCameraAlt } from "react-icons/md";
 import { useLogin } from "../hooks/useLogin";
 import { STATUS } from "../store/features/auth/userSlice";
 
-function LoginPage() {
+const LoginPage = () => {
   const {
     email,
     password,
@@ -307,6 +307,6 @@ function LoginPage() {
       </Flex>
     </Flex>
   );
-}
+};
 
-export default LoginPage;
+export { LoginPage };
