@@ -1,6 +1,5 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { LoginPage } from "./pages";
-import Post from "./pages/Post";
+import { LoginPage, Feed } from "./pages";
 import { useAppSelector } from "./store/store";
 
 const PrivateRoutes = () => {
@@ -22,7 +21,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/login" element={<LoginPage />} />
       </Route>
       <Route path="" element={<PrivateRoutes />}>
-        <Route path="/home" element={<Post />} />
+        <Route path="/home" element={<Feed />} />
       </Route>
     </Routes>
   );

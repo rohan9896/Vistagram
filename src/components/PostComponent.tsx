@@ -90,7 +90,6 @@ const PostComponent = (props: IPostComponentProps) => {
 
   return (
     <Box
-      margin="1rem"
       maxW="470px"
       bg="white"
       borderWidth={1}
