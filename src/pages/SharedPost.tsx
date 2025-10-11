@@ -13,6 +13,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SharedPostView } from "../components/SharedPostView";
+import { CONSTANTS } from "../utils";
 
 interface PostData {
   id: number;
@@ -44,9 +45,8 @@ const SharedPost = () => {
 
       try {
         setLoading(true);
-        // This will be replaced with the actual API call once backend is ready
         const response = await fetch(
-          `http://localhost:3000/api/shared-posts/${postId}`
+          `${CONSTANTS.API_BASE_URL}/api/shared-posts/${postId}`
         );
 
         if (!response.ok) {

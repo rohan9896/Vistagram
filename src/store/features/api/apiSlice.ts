@@ -14,11 +14,12 @@ interface CloudinaryUploadResponse {
 }
 
 import type { RootState } from "../../store";
+import { CONSTANTS } from "../../../utils";
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api",
+    baseUrl: `${CONSTANTS.API_BASE_URL}/api`,
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState;
       const token = state.user.token;
