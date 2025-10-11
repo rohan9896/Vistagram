@@ -19,15 +19,11 @@ import {
   Center,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Comment, type ICommentProps } from "./Comment";
+import { Comment } from "./Comment";
 import { MdSend } from "react-icons/md";
 import { useAppSelector } from "../../store/store";
 import { formatTimestamp } from "../../utils";
-
-export interface IComment extends ICommentProps {
-  id: number;
-  createdAt: string;
-}
+import type { Comment as IComment } from "../../models";
 
 interface ICommentsDrawerProps {
   isOpen: boolean;

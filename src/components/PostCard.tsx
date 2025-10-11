@@ -27,7 +27,7 @@ import {
   MdLocationOn,
   MdShare,
 } from "react-icons/md";
-import { CommentsDrawer, type IComment } from "./PostComment/CommentsDrawer";
+import { CommentsDrawer } from "./PostComment/CommentsDrawer";
 import {
   useGetCommentsQuery,
   useCreateLikeMutation,
@@ -37,7 +37,7 @@ import {
   useCreateSharedPostMutation,
 } from "../store/features/api/apiSlice";
 import { useAppSelector } from "../store/store";
-import type { Comment as ApiComment, Post } from "../models";
+import type { Post } from "../models";
 import { formatTimestamp } from "../utils";
 
 interface IPostComponentProps {
@@ -95,15 +95,6 @@ const PostCard = (props: IPostComponentProps) => {
     skip: !isCommentsOpen,
     refetchOnMountOrArgChange: true,
   });
-
-  const comments: IComment[] = apiComments.map((comment: ApiComment) => ({
-    id: comment.id,
-    username: comment.username,
-    avatar: comment.avatar,
-    text: comment.text,
-    timestamp: "Just now",
-    createdAt: comment.createdAt,
-  }));
 
   const handleLike = async () => {
     if (!user?.id) return;
@@ -382,7 +373,7 @@ const PostCard = (props: IPostComponentProps) => {
       <CommentsDrawer
         isOpen={isCommentsOpen}
         onClose={onCommentsClose}
-        comments={comments}
+        comments={apiComments}
         onAddComment={handleAddComment}
         isLoading={isLoadingComments}
         error={commentsError}
