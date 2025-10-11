@@ -16,7 +16,7 @@ import { useLogin } from "../hooks/useLogin";
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { isLoggedIn } = useAppSelector((user) => user.user);
+  const loggedInUser = useAppSelector((user) => user.user);
   const { handleLogout, isLogoutLoading } = useLogin();
 
   return (
@@ -50,7 +50,7 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            href="/profile"
+            href={`/profile/${loggedInUser.user?.id}`}
             _hover={{ textDecoration: "none", color: "gray.600" }}
           >
             Profile
@@ -69,11 +69,11 @@ const Navbar = () => {
           size="sm"
           colorScheme="vistagram"
           display={{ base: "none", md: "inline-flex" }}
-          onClick={isLoggedIn ? handleLogout : undefined}
-          isLoading={isLoggedIn && isLogoutLoading}
+          onClick={loggedInUser.isLoggedIn ? handleLogout : undefined}
+          isLoading={loggedInUser.isLoggedIn && isLogoutLoading}
           loadingText="Logging out..."
         >
-          {isLoggedIn ? "Logout" : "Login"}
+          {loggedInUser.isLoggedIn ? "Logout" : "Login"}
         </Button>
       </Flex>
 
@@ -95,7 +95,7 @@ const Navbar = () => {
               Explore
             </Link>
             <Link
-              href="/profile"
+              href={`/profile/${loggedInUser.user?.id}`}
               _hover={{ textDecoration: "none", color: "gray.600" }}
               onClick={onClose}
             >
@@ -105,11 +105,11 @@ const Navbar = () => {
               size="sm"
               colorScheme="vistagram"
               w="full"
-              onClick={isLoggedIn ? handleLogout : onClose}
-              isLoading={isLoggedIn && isLogoutLoading}
+              onClick={loggedInUser.isLoggedIn ? handleLogout : onClose}
+              isLoading={loggedInUser.isLoggedIn && isLogoutLoading}
               loadingText="Logging out..."
             >
-              {isLoggedIn ? "Logout" : "Login"}
+              {loggedInUser.isLoggedIn ? "Logout" : "Login"}
             </Button>
           </VStack>
         </Box>

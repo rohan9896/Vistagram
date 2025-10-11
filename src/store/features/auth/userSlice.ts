@@ -1,13 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
-
-interface User {
-  id: number;
-  email: string;
-  username: string;
-  avatar: string;
-  createdAt: string;
-}
+import type { User } from "../../../models";
 
 interface UserState {
   user: User | null;

@@ -16,6 +16,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
@@ -23,6 +24,7 @@ import {
   MdFavorite,
   MdFavoriteBorder,
   MdLocationOn,
+  MdShare,
 } from "react-icons/md";
 import { CommentsDrawer, type IComment } from "./PostComment/CommentsDrawer";
 import {
@@ -31,6 +33,7 @@ import {
   useDeleteLikeMutation,
   useGetLikeByPostAndUserQuery,
   useCreateCommentMutation,
+  useCreateSharedPostMutation,
 } from "../store/features/api/apiSlice";
 import { useAppSelector } from "../store/store";
 import type { Comment as ApiComment } from "../models";
@@ -67,13 +70,13 @@ const PostComponent = (props: IPostComponentProps) => {
   const [createLike] = useCreateLikeMutation();
   const [deleteLike] = useDeleteLikeMutation();
   const [createComment] = useCreateCommentMutation();
+  const [createSharedPost] = useCreateSharedPostMutation();
+  const toast = useToast();
 
-  // Get the like record for this post and user to get the like ID for deletion
-  const { data: likeRecord, refetch: refetchLikeRecord } =
-    useGetLikeByPostAndUserQuery(
-      { postId, userId: user?.id || 0 },
-      { skip: !user?.id }
-    );
+  const { refetch: refetchLikeRecord } = useGetLikeByPostAndUserQuery(
+    { postId, userId: user?.id || 0 },
+    { skip: !user?.id }
+  );
 
   const {
     isOpen: isShowMoreOpen,
@@ -174,6 +177,53 @@ const PostComponent = (props: IPostComponentProps) => {
     }
   };
 
+  const handleShare = async () => {
+    if (!user?.id) {
+      toast({
+        title: "Login Required",
+        description: "Please log in to share posts",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    try {
+      const result = await createSharedPost({ postId }).unwrap();
+
+      if (navigator.clipboard) {
+        const url = window.location.origin + result.shareUrl;
+
+        await navigator.clipboard.writeText(url);
+        toast({
+          title: "Share Link Copied!",
+          description: "The share link has been copied to your clipboard",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Share Link Created",
+          description: `Share URL: ${result.shareUrl}`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error: any) {
+      console.error("Error sharing post:", error);
+      toast({
+        title: "Share Failed",
+        description: error.data?.error || "Failed to create share link",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   const truncatedCaption =
     caption.length > 150 ? caption.slice(0, 150) + "..." : caption;
 
@@ -181,6 +231,7 @@ const PostComponent = (props: IPostComponentProps) => {
     <Box
       maxW="470px"
       width="100%"
+      minWidth="360px"
       bg="white"
       borderWidth={1}
       borderColor="gray.200"
@@ -253,6 +304,20 @@ const PostComponent = (props: IPostComponentProps) => {
             _hover={{
               bg: "transparent",
               transform: "scale(1.1)",
+            }}
+            transition="all 0.2s"
+          />
+          <IconButton
+            onClick={handleShare}
+            aria-label="Share"
+            icon={<MdShare size={22} />}
+            variant="ghost"
+            color="gray.700"
+            size="sm"
+            _hover={{
+              bg: "transparent",
+              transform: "scale(1.1)",
+              color: "vistagram.500",
             }}
             transition="all 0.2s"
           />

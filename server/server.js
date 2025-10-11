@@ -259,6 +259,140 @@ server.use((req, res, next) => {
         }
     }
 
+    // Handle shared posts endpoint - NO AUTH REQUIRED
+    if (req.method === 'GET' && req.url.match(/^\/api\/shared-posts\/\d+$/)) {
+        const postId = parseInt(req.url.split('/')[3]);
+        console.log(`Fetching shared post with ID: ${postId}`);
+
+        try {
+            const dbData = JSON.parse(readFileSync(path.join(__dirname, 'db.json'), 'utf8'));
+            const sharedPosts = dbData.sharedPosts || [];
+            const posts = dbData.posts || [];
+
+            // Check if this post is in the shared posts list
+            const sharedPost = sharedPosts.find(sp => sp.postId === postId);
+            if (!sharedPost) {
+                console.log(`Post ${postId} is not shared or doesn't exist in shared posts`);
+                return res.status(404).json({
+                    error: 'Post not found or not available for sharing'
+                });
+            }
+
+            // Find the actual post data
+            const post = posts.find(p => p.id === postId);
+            if (!post) {
+                console.log(`Post ${postId} not found in posts collection`);
+                return res.status(404).json({
+                    error: 'Post not found'
+                });
+            }
+
+            console.log(`Successfully found shared post: ${post.id}`);
+            return res.json(post);
+        } catch (error) {
+            console.error('Error fetching shared post:', error);
+            return res.status(500).json({
+                error: 'Failed to fetch shared post'
+            });
+        }
+    }
+
+    // Handle create shared post endpoint - REQUIRES AUTH
+    if (req.method === 'POST' && req.url === '/api/shared-posts') {
+        const userId = getUserIdFromToken(req);
+
+        if (!userId) {
+            return res.status(401).json({
+                error: 'Authentication required to share posts'
+            });
+        }
+
+        const { postId } = req.body;
+
+        if (!postId) {
+            return res.status(400).json({
+                error: 'Post ID is required'
+            });
+        }
+
+        try {
+            const dbPath = path.join(__dirname, 'db.json');
+            const dbData = JSON.parse(readFileSync(dbPath, 'utf8'));
+            const posts = dbData.posts || [];
+            const sharedPosts = dbData.sharedPosts || [];
+
+            // Check if post exists
+            const post = posts.find(p => p.id === postId);
+            if (!post) {
+                return res.status(404).json({
+                    error: 'Post not found'
+                });
+            }
+
+            // Check if post is already shared
+            const existingSharedPost = sharedPosts.find(sp => sp.postId === postId);
+            if (existingSharedPost) {
+                console.log(`Post ${postId} is already shared`);
+                return res.json({
+                    id: existingSharedPost.id,
+                    postId: existingSharedPost.postId,
+                    sharedAt: existingSharedPost.sharedAt,
+                    shareUrl: `/shared/${postId}`
+                });
+            }
+
+            // Create new shared post entry
+            const newSharedPost = {
+                id: sharedPosts.length > 0 ? Math.max(...sharedPosts.map(sp => sp.id)) + 1 : 1,
+                postId: postId,
+                sharedAt: new Date().toISOString()
+            };
+
+            sharedPosts.push(newSharedPost);
+            dbData.sharedPosts = sharedPosts;
+
+            // Write back to database
+            require('fs').writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
+
+            console.log(`Created shared post for post ID: ${postId}`);
+            return res.json({
+                ...newSharedPost,
+                shareUrl: `/shared/${postId}`
+            });
+        } catch (error) {
+            console.error('Error creating shared post:', error);
+            return res.status(500).json({
+                error: 'Failed to create shared post'
+            });
+        }
+    }
+
+    // Handle get user by ID endpoint
+    if (req.method === 'GET' && req.url.match(/^\/api\/users\/\d+$/)) {
+        const userId = parseInt(req.url.split('/')[3]);
+
+        try {
+            const dbData = JSON.parse(readFileSync(path.join(__dirname, 'db.json'), 'utf8'));
+            const users = dbData.users || [];
+
+            const user = users.find(u => u.id === userId);
+            if (!user) {
+                return res.status(404).json({
+                    error: 'User not found'
+                });
+            }
+
+            // Return user without password
+            const { password, ...userWithoutPassword } = user;
+            return res.json(userWithoutPassword);
+        } catch (error) {
+            console.error('Error fetching user:', error);
+            return res.status(500).json({
+                error: 'Failed to fetch user information'
+            });
+        }
+    }
+
     next();
 });
 

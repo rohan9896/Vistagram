@@ -241,7 +241,7 @@ const CreatePost = ({
   };
 
   return (
-    <Box width="100%" minWidth="400px" maxW="470px">
+    <Box width="100%" minWidth="360px">
       <Flex gap={3} align="start">
         <Avatar size="md" name="current_user" src={currentUserAvatar} />
 

@@ -1,13 +1,15 @@
+interface User {
+  id: number;
+  email: string;
+  username: string;
+  avatar: string;
+  createdAt: string;
+}
+
 interface LoginResponse {
   success: boolean;
   token: string;
-  user: {
-    id: number;
-    email: string;
-    username: string;
-    avatar: string;
-    createdAt: string;
-  };
+  user: User;
   message?: string;
 }
 
@@ -54,6 +56,7 @@ interface Comment {
 }
 
 export {
+  User,
   LoginCredentials,
   LoginResponse,
   LogoutResponse,

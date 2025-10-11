@@ -180,6 +180,29 @@ export const apiSlice = createApi({
         };
       },
     }),
+    createSharedPost: builder.mutation<
+      {
+        id: number;
+        postId: number;
+        sharedAt: string;
+        shareUrl: string;
+      },
+      { postId: number }
+    >({
+      query: (shareData) => ({
+        url: "/shared-posts",
+        method: "POST",
+        body: shareData,
+      }),
+      transformErrorResponse: (response: any) => {
+        return {
+          status: response.status,
+          data:
+            response.data?.message ||
+            "Failed to create shared post. Please try again.",
+        };
+      },
+    }),
     getPostLikers: builder.query<UserResponse[], number>({
       query: (postId) => `/posts/${postId}/likers`,
       transformErrorResponse: (response: any) => {
@@ -188,6 +211,31 @@ export const apiSlice = createApi({
           data:
             response.data?.message ||
             "Failed to fetch users who liked this post.",
+        };
+      },
+    }),
+    getUserById: builder.query<UserResponse, string>({
+      query: (userId) => `/users/${userId}`,
+      transformErrorResponse: (response: any) => {
+        return {
+          status: response.status,
+          data: response.data?.message || "Failed to fetch user information.",
+        };
+      },
+    }),
+    getPostsByUserId: builder.query<Post[], string>({
+      query: (userId) => ({
+        url: "/posts",
+        params: {
+          userId,
+          _sort: "createdAt",
+          _order: "desc",
+        },
+      }),
+      transformErrorResponse: (response: any) => {
+        return {
+          status: response.status,
+          data: response.data?.message || "Failed to fetch user posts.",
         };
       },
     }),
@@ -207,4 +255,7 @@ export const {
   useGetLikeByPostAndUserQuery,
   useCreateCommentMutation,
   useGetPostLikersQuery,
+  useCreateSharedPostMutation,
+  useGetUserByIdQuery,
+  useGetPostsByUserIdQuery,
 } = apiSlice;

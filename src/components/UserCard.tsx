@@ -10,33 +10,26 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import { MdEmail, MdCalendarToday } from "react-icons/md";
-import { useAppSelector } from "../store/store";
 import { FaIdBadge } from "react-icons/fa";
+import type { User } from "../models";
+import { useCallback } from "react";
+import { useAppSelector } from "../store/store";
 
-const UserCard = () => {
-  const user = useAppSelector((state) => state.user.user);
-  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
+interface UserCardProps {
+  user: User;
+}
 
-  if (!isLoggedIn || !user) {
-    return (
-      <Card bg="white" borderColor="gray.200" borderWidth={1}>
-        <CardBody>
-          <Text color="gray.600" textAlign="center">
-            Please log in to view your profile
-          </Text>
-        </CardBody>
-      </Card>
-    );
-  }
+const UserCard = ({ user }: UserCardProps) => {
+  const loggedInUserId = useAppSelector((state) => state.user.user?.id);
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
-  };
+  }, []);
 
   return (
     <Card
@@ -63,7 +56,7 @@ const UserCard = () => {
               />
               <VStack align="start" spacing={1}>
                 <Heading size="md" color="gray.800">
-                  {user.username}
+                  {user.username} {loggedInUserId === user.id ? "(You)" : ""}
                 </Heading>
                 <Badge colorScheme="vistagram" variant="subtle">
                   Active User
