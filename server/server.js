@@ -7,7 +7,7 @@ const server = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, 'db.json'));
 const middlewares = jsonServer.defaults();
 
-const JWT_SECRET = 'your-secret-key'; // Change this to a secure secret
+const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET_FALLBACK';
 
 // Use default middlewares
 server.use(middlewares);
