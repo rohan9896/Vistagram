@@ -21,26 +21,25 @@ const CreatePostButton = () => {
 
   return (
     <>
-      <Box
-        position="fixed"
-        bottom="1rem"
-        right="50%"
-        transform="translateX(50%)"
-        zIndex={10}
-      >
+      <Box position="fixed" bottom="2rem" right="2rem" zIndex={1000}>
         <Button
           onClick={onOpen}
-          leftIcon={<MdAdd size={20} />}
           colorScheme="vistagram"
           size="lg"
+          borderRadius="full"
+          width="60px"
+          height="60px"
           boxShadow="lg"
           _hover={{
-            transform: "scale(1.05)",
+            transform: "scale(1.1)",
             boxShadow: "xl",
           }}
-          transition="all 0.2s"
+          _active={{
+            transform: "scale(0.95)",
+          }}
+          transition="all 0.2s ease-in-out"
         >
-          Create Post
+          <MdAdd size={28} />
         </Button>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -49,7 +48,7 @@ const CreatePostButton = () => {
           <ModalHeader>Create Post</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreatePost currentUserAvatar={avatar ?? ""} onSubmit={() => {}} />
+            <CreatePost currentUserAvatar={avatar ?? ""} onSuccess={onClose} />
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>

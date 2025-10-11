@@ -7,9 +7,11 @@ import {
   Image,
   Textarea,
   useToast,
+  Text,
+  Spinner,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import { MdClose, MdImage, MdCameraAlt } from "react-icons/md";
+import { useRef, useState, useEffect } from "react";
+import { MdClose, MdImage, MdCameraAlt, MdLocationOn } from "react-icons/md";
 import { useAppSelector } from "../store/store";
 import {
   useUploadImageToCloudinaryMutation,
@@ -27,14 +29,97 @@ const CreatePost = ({
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [location, setLocation] = useState<string>("");
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  const userId = useAppSelector((state) => state.user.user?.id);
+  const user = useAppSelector((state) => state.user.user);
   const toast = useToast();
 
   const [uploadImageToCloudinary] = useUploadImageToCloudinaryMutation();
   const [createPost] = useCreatePostMutation();
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  const getCurrentLocation = async () => {
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported by this browser");
+      return;
+    }
+
+    setIsGettingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const locationName = await reverseGeocode(latitude, longitude);
+          setLocation(locationName);
+        } catch (error) {
+          console.error("Error getting location:", error);
+          setLocation("Location unavailable");
+        } finally {
+          setIsGettingLocation(false);
+        }
+      },
+      (error) => {
+        console.error("Error getting geolocation:", error);
+        setLocation("Location unavailable");
+        setIsGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000,
+      }
+    );
+  };
+
+  const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
+    try {
+      // get location using OpenStreetMap api
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1`
+      );
+
+      if (!response.ok) {
+        throw new Error("Geocoding failed");
+      }
+
+      const data = await response.json();
+
+      const address = data.address;
+      const city =
+        address.city || address.town || address.village || address.hamlet;
+      const state = address.state || address.region;
+      const country = address.country;
+
+      let locationString = "";
+      if (city) {
+        locationString += city;
+      }
+
+      if (state && city) {
+        locationString += `, ${state}`;
+      } else if (state) {
+        locationString += state;
+      }
+
+      if (country && locationString) {
+        locationString += `, ${country}`;
+      } else if (country) {
+        locationString += country;
+      }
+
+      return locationString || "Unknown location";
+    } catch (error) {
+      console.error("Reverse geocoding error:", error);
+      return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+    }
+  };
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -47,13 +132,11 @@ const CreatePost = ({
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith("image/")) {
         alert("Please select an image file");
         return;
       }
 
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert("Image size should be less than 5MB");
         return;
@@ -61,7 +144,6 @@ const CreatePost = ({
 
       setSelectedImage(file);
 
-      // Create preview URL
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
@@ -105,18 +187,33 @@ const CreatePost = ({
       return;
     }
 
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to create a post",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     setIsUploading(true);
 
     try {
-      // Upload image to Cloudinary
       const uploadResult = await uploadImageToCloudinary(
         selectedImage
       ).unwrap();
 
-      // Create post with the uploaded image URL
       await createPost({
-        caption: caption.trim(),
+        userId: user.id,
+        username: user.username,
+        userAvatar: user.avatar || currentUserAvatar,
         imageUrl: uploadResult.url,
+        caption: caption.trim(),
+        location: location || "",
+        likes: 0,
+        createdAt: new Date().toISOString(),
       }).unwrap();
 
       toast({
@@ -144,7 +241,7 @@ const CreatePost = ({
   };
 
   return (
-    <Box width="100%">
+    <Box width="100%" minWidth="400px" maxW="470px">
       <Flex gap={3} align="start">
         <Avatar size="md" name="current_user" src={currentUserAvatar} />
 
@@ -170,7 +267,6 @@ const CreatePost = ({
             }}
           />
 
-          {/* Image Preview */}
           {imagePreview && (
             <Box position="relative" mt={3}>
               <Image
@@ -178,7 +274,7 @@ const CreatePost = ({
                 alt="Preview"
                 maxH="200px"
                 w="100%"
-                objectFit="cover"
+                objectFit="contain"
                 borderRadius="lg"
               />
               <IconButton
@@ -196,7 +292,6 @@ const CreatePost = ({
             </Box>
           )}
 
-          {/* Hidden file inputs */}
           <input
             type="file"
             ref={fileInputRef}
@@ -213,6 +308,20 @@ const CreatePost = ({
             capture="environment"
             style={{ display: "none" }}
           />
+
+          {(location || isGettingLocation) && (
+            <Flex align="center" gap={2} mt={3} color="gray.600" fontSize="sm">
+              <MdLocationOn size={16} />
+              {isGettingLocation ? (
+                <Flex align="center" gap={2}>
+                  <Spinner size="xs" />
+                  <Text>Getting location...</Text>
+                </Flex>
+              ) : (
+                <Text>{location}</Text>
+              )}
+            </Flex>
+          )}
 
           <Flex justify="space-between" align="center" mt={3}>
             <Flex gap={2}>
@@ -232,6 +341,16 @@ const CreatePost = ({
                 colorScheme="vistagram"
                 size="sm"
                 onClick={handleCameraClick}
+              />
+
+              <IconButton
+                aria-label="Refresh location"
+                icon={<MdLocationOn size={20} />}
+                variant="ghost"
+                colorScheme="vistagram"
+                size="sm"
+                onClick={getCurrentLocation}
+                isLoading={isGettingLocation}
               />
             </Flex>
 

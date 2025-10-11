@@ -1,30 +1,61 @@
-import { Flex, VStack, Spinner, Center, Text } from "@chakra-ui/react";
-import { PostComponent } from "../components";
+import {
+  Flex,
+  VStack,
+  Spinner,
+  Center,
+  Text,
+  Button,
+  Box,
+} from "@chakra-ui/react";
+import { PostComponent, UserCard } from "../components";
 import { CreatePost } from "../components/CreatePost";
 import CreatePostButton from "../components/CreatePostButton";
 import { useAppSelector } from "../store/store";
 import { useGetPostsQuery } from "../store/features/api/apiSlice";
+import { useState, useEffect } from "react";
+import { formatTimestamp } from "../utils";
 
 const Feed = () => {
   const user = useAppSelector((state) => state.user.user);
-  const { data: posts, isLoading, error } = useGetPostsQuery();
+  const [page, setPage] = useState(1);
+  const [allPosts, setAllPosts] = useState<any[]>([]);
 
-  const formatTimestamp = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-    );
+  const {
+    data: posts,
+    isLoading,
+    error,
+    refetch,
+    isFetching,
+  } = useGetPostsQuery(
+    {
+      page,
+      limit: 10,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24)
-      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+  // infinite scroll pagination
+  useEffect(() => {
+    if (posts) {
+      if (page === 1) {
+        setAllPosts(posts);
+      } else {
+        setAllPosts((prev) => [...prev, ...posts]);
+      }
+    }
+  }, [posts, page]);
 
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7)
-      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+  const loadMorePosts = () => {
+    if (!isFetching && posts && posts.length === 10) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
-    return date.toLocaleDateString();
+  const handlePostCreated = () => {
+    setPage(1);
+    refetch();
   };
 
   if (isLoading) {
@@ -52,13 +83,23 @@ const Feed = () => {
 
   return (
     <Flex minH="100vh" bg="gray.50" justify="center" align="start" py={8}>
-      <VStack spacing={6} padding={"1rem"}>
-        <CreatePost
-          currentUserAvatar={user?.avatar ?? ""}
-          onSubmit={() => {}}
-        />
+      <VStack spacing={6} padding={"1rem"} pb="6rem">
+        <Box
+          padding="1rem"
+          border="1px solid"
+          borderColor="gray.200"
+          rounded="1rem"
+          width="100%"
+        >
+          <CreatePost
+            currentUserAvatar={user?.avatar ?? ""}
+            onSuccess={handlePostCreated}
+          />
+        </Box>
 
-        {posts?.map((post) => (
+        {/* <UserCard /> */}
+
+        {allPosts?.map((post) => (
           <PostComponent
             key={post.id}
             postId={post.id}
@@ -69,8 +110,23 @@ const Feed = () => {
             caption={post.caption}
             initialLikes={post.likes}
             timestamp={formatTimestamp(post.createdAt)}
+            isLikedByUser={post.isLikedByUser}
           />
         ))}
+
+        {/* Load More Button */}
+        {posts && posts.length === 10 && (
+          <Button
+            onClick={loadMorePosts}
+            isLoading={isFetching}
+            loadingText="Loading more..."
+            colorScheme="vistagram"
+            variant="outline"
+            size="md"
+          >
+            Load More Posts
+          </Button>
+        )}
       </VStack>
 
       <CreatePostButton />

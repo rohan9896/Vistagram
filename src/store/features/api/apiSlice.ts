@@ -29,6 +29,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
+  refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginCredentials>({
       query: (credentials) => ({
@@ -52,8 +53,16 @@ export const apiSlice = createApi({
     getCurrentUser: builder.query<UserResponse, void>({
       query: () => "/auth/me",
     }),
-    getPosts: builder.query<Post[], void>({
-      query: () => "/posts",
+    getPosts: builder.query<Post[], { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 10 } = {}) => ({
+        url: "/posts",
+        params: {
+          _page: page,
+          _limit: limit,
+          _sort: "createdAt",
+          _order: "desc",
+        },
+      }),
     }),
     getComments: builder.query<Comment[], number>({
       query: (postId) => `/comments?postId=${postId}`,
@@ -89,12 +98,98 @@ export const apiSlice = createApi({
         }
       },
     }),
-    createPost: builder.mutation<Post, { caption: string; imageUrl: string }>({
+    createPost: builder.mutation<
+      Post,
+      {
+        userId: number;
+        username: string;
+        userAvatar: string;
+        imageUrl: string;
+        caption: string;
+        location?: string;
+        likes?: number;
+        createdAt?: string;
+      }
+    >({
       query: (postData) => ({
         url: "/posts",
         method: "POST",
         body: postData,
       }),
+      transformErrorResponse: (response: any) => {
+        return {
+          status: response.status,
+          data:
+            response.data?.message ||
+            "Failed to create post. Please try again.",
+        };
+      },
+    }),
+    createLike: builder.mutation<
+      { id: number; postId: number; userId: number; createdAt: string },
+      { postId: number; userId: number }
+    >({
+      query: (likeData) => ({
+        url: "/likes",
+        method: "POST",
+        body: {
+          ...likeData,
+          createdAt: new Date().toISOString(),
+        },
+      }),
+    }),
+    deleteLike: builder.mutation<void, { likeId: number; postId: number }>({
+      query: ({ likeId }) => ({
+        url: `/likes/${likeId}`,
+        method: "DELETE",
+      }),
+    }),
+    getLikeByPostAndUser: builder.query<
+      { id: number; postId: number; userId: number; createdAt: string } | null,
+      { postId: number; userId: number }
+    >({
+      query: ({ postId, userId }) => `/likes?postId=${postId}&userId=${userId}`,
+      transformResponse: (response: any[]) => {
+        return response.length > 0 ? response[0] : null;
+      },
+    }),
+    createComment: builder.mutation<
+      Comment,
+      {
+        postId: number;
+        userId: number;
+        username: string;
+        avatar: string;
+        text: string;
+      }
+    >({
+      query: (commentData) => ({
+        url: "/comments",
+        method: "POST",
+        body: {
+          ...commentData,
+          createdAt: new Date().toISOString(),
+        },
+      }),
+      transformErrorResponse: (response: any) => {
+        return {
+          status: response.status,
+          data:
+            response.data?.message ||
+            "Failed to create comment. Please try again.",
+        };
+      },
+    }),
+    getPostLikers: builder.query<UserResponse[], number>({
+      query: (postId) => `/posts/${postId}/likers`,
+      transformErrorResponse: (response: any) => {
+        return {
+          status: response.status,
+          data:
+            response.data?.message ||
+            "Failed to fetch users who liked this post.",
+        };
+      },
     }),
   }),
 });
@@ -107,4 +202,9 @@ export const {
   useGetCommentsQuery,
   useUploadImageToCloudinaryMutation,
   useCreatePostMutation,
+  useCreateLikeMutation,
+  useDeleteLikeMutation,
+  useGetLikeByPostAndUserQuery,
+  useCreateCommentMutation,
+  useGetPostLikersQuery,
 } = apiSlice;

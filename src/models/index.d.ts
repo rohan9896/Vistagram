@@ -40,6 +40,7 @@ interface Post {
   likes: number;
   createdAt: string;
   updatedAt: string;
+  isLikedByUser?: boolean;
 }
 
 interface Comment {

@@ -25,7 +25,14 @@ import {
   MdLocationOn,
 } from "react-icons/md";
 import { CommentsDrawer, type IComment } from "./PostComment/CommentsDrawer";
-import { useGetCommentsQuery } from "../store/features/api/apiSlice";
+import {
+  useGetCommentsQuery,
+  useCreateLikeMutation,
+  useDeleteLikeMutation,
+  useGetLikeByPostAndUserQuery,
+  useCreateCommentMutation,
+} from "../store/features/api/apiSlice";
+import { useAppSelector } from "../store/store";
 import type { Comment as ApiComment } from "../models";
 
 interface IPostComponentProps {
@@ -37,6 +44,7 @@ interface IPostComponentProps {
   caption: string;
   initialLikes: number;
   timestamp: string;
+  isLikedByUser?: boolean;
 }
 
 const PostComponent = (props: IPostComponentProps) => {
@@ -49,10 +57,24 @@ const PostComponent = (props: IPostComponentProps) => {
     caption,
     initialLikes,
     timestamp,
+    isLikedByUser = false,
   } = props;
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(initialLikes);
+  const [isLiked, setIsLiked] = useState(isLikedByUser);
+  const [likeCount, setLikeCount] = useState(initialLikes);
+  const user = useAppSelector((state) => state.user.user);
+
+  const [createLike] = useCreateLikeMutation();
+  const [deleteLike] = useDeleteLikeMutation();
+  const [createComment] = useCreateCommentMutation();
+
+  // Get the like record for this post and user to get the like ID for deletion
+  const { data: likeRecord, refetch: refetchLikeRecord } =
+    useGetLikeByPostAndUserQuery(
+      { postId, userId: user?.id || 0 },
+      { skip: !user?.id }
+    );
+
   const {
     isOpen: isShowMoreOpen,
     onOpen: onShowMoreOpen,
@@ -65,37 +87,91 @@ const PostComponent = (props: IPostComponentProps) => {
     onClose: onCommentsClose,
   } = useDisclosure();
 
-  // Lazy load comments only when comments drawer is opened
   const {
     data: apiComments = [],
     isLoading: isLoadingComments,
     error: commentsError,
+    refetch: refetchComments,
   } = useGetCommentsQuery(postId, {
-    skip: !isCommentsOpen, // Only fetch when drawer is open
+    skip: !isCommentsOpen,
+    refetchOnMountOrArgChange: true,
   });
 
-  // Map API comments to IComment format
   const comments: IComment[] = apiComments.map((comment: ApiComment) => ({
     id: comment.id,
     username: comment.username,
     avatar: comment.avatar,
     text: comment.text,
-    timestamp: "Just now", // This will be formatted in CommentsDrawer
+    timestamp: "Just now",
     createdAt: comment.createdAt,
   }));
 
-  const handleLike = () => {
-    if (isLiked) {
-      setLikes(likes - 1);
+  const handleLike = async () => {
+    if (!user?.id) return;
+
+    const wasLiked = isLiked;
+    const previousLikeCount = likeCount;
+
+    if (wasLiked) {
+      setIsLiked(false);
+      setLikeCount(likeCount - 1);
     } else {
-      setLikes(likes + 1);
+      setIsLiked(true);
+      setLikeCount(likeCount + 1);
     }
-    setIsLiked(!isLiked);
+
+    try {
+      if (wasLiked) {
+        const { data: currentLikeRecord } = await refetchLikeRecord();
+        console.log(
+          "Current like record:",
+          currentLikeRecord,
+          "for postId:",
+          postId,
+          "userId:",
+          user.id
+        );
+        if (currentLikeRecord?.id) {
+          console.log("Deleting like with ID:", currentLikeRecord.id);
+          await deleteLike({ likeId: currentLikeRecord.id, postId }).unwrap();
+        } else {
+          console.error(
+            "No like record found to delete for postId:",
+            postId,
+            "userId:",
+            user.id
+          );
+          setIsLiked(wasLiked);
+          setLikeCount(previousLikeCount);
+          return;
+        }
+      } else {
+        await createLike({ postId, userId: user.id }).unwrap();
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      setIsLiked(wasLiked);
+      setLikeCount(previousLikeCount);
+    }
   };
 
-  const handleAddComment = (commentText: string) => {
-    // TODO: Implement add comment API call
-    console.log("Adding comment:", commentText, "to post:", postId);
+  const handleAddComment = async (commentText: string) => {
+    if (!user?.id || !commentText.trim()) return;
+
+    try {
+      await createComment({
+        postId,
+        userId: user.id,
+        username: user.username,
+        avatar: user.avatar || "",
+        text: commentText.trim(),
+      }).unwrap();
+
+      console.log("Comment created successfully");
+      refetchComments();
+    } catch (error) {
+      console.error("Error creating comment:", error);
+    }
   };
 
   const truncatedCaption =
@@ -104,6 +180,7 @@ const PostComponent = (props: IPostComponentProps) => {
   return (
     <Box
       maxW="470px"
+      width="100%"
       bg="white"
       borderWidth={1}
       borderColor="gray.200"
@@ -182,7 +259,7 @@ const PostComponent = (props: IPostComponentProps) => {
         </HStack>
 
         <Text fontSize="sm" fontWeight="semibold" color="gray.800" mb={2}>
-          {likes.toLocaleString()} likes
+          {likeCount.toLocaleString()} likes
         </Text>
 
         <Text fontSize="sm" color="gray.800">

@@ -21,6 +21,8 @@ import {
 import React, { useState } from "react";
 import { Comment, type ICommentProps } from "./Comment";
 import { MdSend } from "react-icons/md";
+import { useAppSelector } from "../../store/store";
+import { formatTimestamp } from "../../utils";
 
 export interface IComment extends ICommentProps {
   id: number;
@@ -39,26 +41,9 @@ interface ICommentsDrawerProps {
 const CommentsDrawer = (props: ICommentsDrawerProps) => {
   const { isOpen, onClose, comments, onAddComment, isLoading, error } = props;
 
+  const user = useAppSelector((state) => state.user.user);
+
   const [newComment, setNewComment] = useState("");
-
-  // Helper function to format timestamp
-  const formatTimestamp = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-    );
-
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24)
-      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
-
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7)
-      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
-
-    return date.toLocaleDateString();
-  };
 
   const handleAddComment = () => {
     if (newComment.trim()) {
@@ -130,11 +115,7 @@ const CommentsDrawer = (props: ICommentsDrawerProps) => {
             mt={4}
           >
             <Flex gap={3}>
-              <Avatar
-                size="sm"
-                name="current_user"
-                src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150"
-              />
+              <Avatar size="sm" name="current_user" src={user?.avatar ?? ""} />
               <InputGroup>
                 <Input
                   placeholder="Add a comment..."
