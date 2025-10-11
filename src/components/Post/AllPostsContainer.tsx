@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { PostList } from "./PostList";
-import { useGetPostsByUserIdQuery } from "../store/features/api/apiSlice";
-import type { Post } from "../models";
+import { useGetPostsQuery } from "../../store/features/api/apiSlice";
+import type { Post } from "../../models";
 
-interface UserPostsContainerProps {
-  userId: string;
+interface AllPostsContainerProps {
+  onPostsRefresh?: () => void;
 }
 
-const UserPostsContainer = ({ userId }: UserPostsContainerProps) => {
+const AllPostsContainer = ({ onPostsRefresh }: AllPostsContainerProps) => {
   const [page, setPage] = useState(1);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
 
@@ -15,10 +15,10 @@ const UserPostsContainer = ({ userId }: UserPostsContainerProps) => {
     data: postsData,
     isLoading,
     error,
+    refetch,
     isFetching,
-  } = useGetPostsByUserIdQuery(
+  } = useGetPostsQuery(
     {
-      userId,
       page,
       limit: 10,
     },
@@ -38,17 +38,29 @@ const UserPostsContainer = ({ userId }: UserPostsContainerProps) => {
     }
   }, [postsData, page]);
 
-  // Reset pagination when userId changes
-  useEffect(() => {
-    setPage(1);
-    setAllPosts([]);
-  }, [userId]);
-
   const loadMorePosts = () => {
     if (!isFetching && postsData && postsData.length === 10) {
       setPage((prev) => prev + 1);
     }
   };
+
+  const handleRefresh = () => {
+    setPage(1);
+    refetch();
+    onPostsRefresh?.();
+  };
+
+  // Expose refresh function for parent components
+  useEffect(() => {
+    if (onPostsRefresh) {
+      (window as any).postListRefresh = handleRefresh;
+    }
+    return () => {
+      if ((window as any).postListRefresh) {
+        delete (window as any).postListRefresh;
+      }
+    };
+  }, [onPostsRefresh]);
 
   return (
     <PostList
@@ -56,7 +68,7 @@ const UserPostsContainer = ({ userId }: UserPostsContainerProps) => {
       isLoading={isLoading}
       error={error}
       emptyMessage="No posts yet"
-      emptyDescription="This user hasn't shared any posts."
+      emptyDescription="Be the first to share a post!"
       hasMorePosts={postsData && postsData.length === 10}
       isLoadingMore={isFetching}
       onLoadMore={loadMorePosts}
@@ -64,4 +76,4 @@ const UserPostsContainer = ({ userId }: UserPostsContainerProps) => {
   );
 };
 
-export { UserPostsContainer };
+export { AllPostsContainer };

@@ -12,11 +12,11 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState, useEffect } from "react";
 import { MdClose, MdImage, MdCameraAlt, MdLocationOn } from "react-icons/md";
-import { useAppSelector } from "../store/store";
+import { useAppSelector } from "../../store/store";
 import {
   useUploadImageToCloudinaryMutation,
   useCreatePostMutation,
-} from "../store/features/api/apiSlice";
+} from "../../store/features/api/apiSlice";
 
 const CreatePost = ({
   onSuccess,
@@ -241,7 +241,7 @@ const CreatePost = ({
   };
 
   return (
-    <Box width="100%" minWidth="360px">
+    <Box width="100%" minWidth={{ base: "280px", sm: "360px" }}>
       <Flex gap={3} align="start">
         <Avatar size="md" name="current_user" src={currentUserAvatar} />
 
@@ -249,7 +249,7 @@ const CreatePost = ({
           <Textarea
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
-            placeholder="Share your clicks"
+            placeholder="Share your thoughts..."
             bg="gray.100"
             borderRadius="xl"
             border="none"

@@ -42,7 +42,6 @@ import { formatTimestamp } from "../utils";
 
 interface IPostComponentProps {
   post: Post;
-  // timestamp: string;
 }
 
 const PostCard = (props: IPostComponentProps) => {
@@ -228,7 +227,7 @@ const PostCard = (props: IPostComponentProps) => {
     <Box
       maxW="470px"
       width="100%"
-      minWidth="360px"
+      minWidth={{ base: "280px", sm: "360px" }}
       bg="white"
       borderWidth={1}
       borderColor="gray.200"

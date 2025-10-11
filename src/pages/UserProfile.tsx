@@ -34,8 +34,14 @@ const UserProfile = () => {
 
   if (userError) {
     return (
-      <Flex minH="100vh" bg="gray.50" justify="center" align="center">
-        <Alert status="error" maxW="470px">
+      <Flex
+        minH="100vh"
+        bg="gray.50"
+        justify="center"
+        align="center"
+        px={{ base: 2, sm: 4 }}
+      >
+        <Alert status="error" maxW={{ base: "90%", sm: "470px" }}>
           <AlertIcon />
           Failed to load user profile. Please try again.
         </Alert>
@@ -45,8 +51,14 @@ const UserProfile = () => {
 
   if (!user) {
     return (
-      <Flex minH="100vh" bg="gray.50" justify="center" align="center">
-        <Alert status="warning" maxW="470px">
+      <Flex
+        minH="100vh"
+        bg="gray.50"
+        justify="center"
+        align="center"
+        px={{ base: 2, sm: 4 }}
+      >
+        <Alert status="warning" maxW={{ base: "90%", sm: "470px" }}>
           <AlertIcon />
           User not found.
         </Alert>
@@ -55,8 +67,20 @@ const UserProfile = () => {
   }
 
   return (
-    <Flex minH="100vh" bg="gray.50" justify="center" align="start" py={8}>
-      <VStack spacing={6} padding="1rem" maxW="470px" width="100%">
+    <Flex
+      minH="100vh"
+      bg="gray.50"
+      justify="center"
+      align="start"
+      py={8}
+      px={{ base: 2, sm: 4 }}
+    >
+      <VStack
+        spacing={6}
+        padding={{ base: "0.5rem", sm: "1rem" }}
+        maxW="500px"
+        width="100%"
+      >
         {/* User Card */}
         <UserCard user={user} />
 

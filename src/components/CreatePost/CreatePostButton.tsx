@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { MdAdd } from "react-icons/md";
 import { CreatePost } from "./CreatePost";
-import { useAppSelector } from "../store/store";
+import { useAppSelector } from "../../store/store";
 
 const CreatePostButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -57,4 +57,4 @@ const CreatePostButton = () => {
   );
 };
 
-export default CreatePostButton;
+export { CreatePostButton };

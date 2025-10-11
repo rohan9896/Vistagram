@@ -1,7 +1,9 @@
 export { PostCard } from "./PostCard";
-export { PostList } from "./PostList";
-export { AllPostsContainer } from "./AllPostsContainer";
-export { UserPostsContainer } from "./UserPostsContainer";
+export { PostList } from "./Post/PostList";
+export { AllPostsContainer } from "./Post/AllPostsContainer";
+export { UserPostsContainer } from "./Post/UserPostsContainer";
 export { Navbar } from "./Navbar";
 export { UserCard } from "./UserCard";
 export { SharedPostView } from "./SharedPostView";
+export { CreatePost } from "./CreatePost/CreatePost";
+export { CreatePostButton } from "./CreatePost/CreatePostButton";

@@ -1,5 +1,5 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { LoginPage, Feed, SharedPost, UserProfile } from "./pages";
+import { LoginPage, Feed, SharedPost, UserProfile, NotFound } from "./pages";
 import { useAppSelector } from "./store/store";
 
 const PrivateRoutes = () => {
@@ -28,6 +28,8 @@ export const AppRouter: React.FC = () => {
       <Route path="" element={<RestrictedRoutes />}>
         <Route path="/login" element={<LoginPage />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

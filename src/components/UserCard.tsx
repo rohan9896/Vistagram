@@ -39,7 +39,7 @@ const UserCard = ({ user }: UserCardProps) => {
       boxShadow="md"
       borderRadius="lg"
       overflow="hidden"
-      minWidth="400px"
+      minWidth={{ base: "280px", sm: "400px" }}
       maxW="470px"
       width="100%"
     >
