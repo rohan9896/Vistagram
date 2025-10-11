@@ -8,20 +8,12 @@ import {
   Spinner,
   Alert,
   AlertIcon,
-  Container,
 } from "@chakra-ui/react";
-import { UserCard } from "../components/UserCard";
-import { PostComponent } from "../components/PostComponent";
-import {
-  useGetUserByIdQuery,
-  useGetPostsByUserIdQuery,
-} from "../store/features/api/apiSlice";
-import { useAppSelector } from "../store/store";
+import { UserCard, UserPostsContainer } from "../components";
+import { useGetUserByIdQuery } from "../store/features/api/apiSlice";
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
-
-  const loggedInUserId = useAppSelector((state) => state.user.user?.id);
 
   const {
     data: user,
@@ -29,42 +21,36 @@ const UserProfile = () => {
     error: userError,
   } = useGetUserByIdQuery(userId!);
 
-  const {
-    data: posts,
-    isLoading: postsLoading,
-    error: postsError,
-  } = useGetPostsByUserIdQuery(userId!);
-
   if (userLoading) {
     return (
-      <Container maxW="container.md" py={8}>
+      <Flex minH="100vh" bg="gray.50" justify="center" align="center">
         <VStack spacing={4}>
           <Spinner size="lg" color="vistagram.500" />
           <Text>Loading user profile...</Text>
         </VStack>
-      </Container>
+      </Flex>
     );
   }
 
   if (userError) {
     return (
-      <Container maxW="container.md" py={8}>
-        <Alert status="error">
+      <Flex minH="100vh" bg="gray.50" justify="center" align="center">
+        <Alert status="error" maxW="470px">
           <AlertIcon />
           Failed to load user profile. Please try again.
         </Alert>
-      </Container>
+      </Flex>
     );
   }
 
   if (!user) {
     return (
-      <Container maxW="container.md" py={8}>
-        <Alert status="warning">
+      <Flex minH="100vh" bg="gray.50" justify="center" align="center">
+        <Alert status="warning" maxW="470px">
           <AlertIcon />
           User not found.
         </Alert>
-      </Container>
+      </Flex>
     );
   }
 
@@ -76,59 +62,11 @@ const UserProfile = () => {
 
         {/* Posts Section */}
         <Box width="100%">
-          <Heading
-            margin="1rem"
-            size="lg"
-            mb={6}
-            color="gray.800"
-            textAlign="left"
-          >
-            {loggedInUserId === user.id ? "My" : ""} Posts
+          <Heading size="lg" mb={6} color="gray.800" textAlign="center">
+            Posts
           </Heading>
 
-          {postsLoading ? (
-            <VStack spacing={4}>
-              <Spinner size="lg" color="vistagram.500" />
-              <Text>Loading posts...</Text>
-            </VStack>
-          ) : postsError ? (
-            <Alert status="error">
-              <AlertIcon />
-              Failed to load posts. Please try again.
-            </Alert>
-          ) : !posts || posts.length === 0 ? (
-            <Box
-              textAlign="center"
-              py={12}
-              bg="white"
-              borderRadius="lg"
-              border="1px solid"
-              borderColor="gray.200"
-            >
-              <Text fontSize="lg" color="gray.500" mb={2}>
-                No posts yet
-              </Text>
-              <Text fontSize="sm" color="gray.400">
-                This user hasn't shared any posts.
-              </Text>
-            </Box>
-          ) : (
-            <VStack spacing={6}>
-              {posts.map((post) => (
-                <PostComponent
-                  key={post.id}
-                  postId={post.id}
-                  username={post.username}
-                  location={post.location || ""}
-                  userAvatar={post.userAvatar}
-                  imageUrl={post.imageUrl}
-                  caption={post.caption}
-                  initialLikes={post.likes}
-                  timestamp={post.createdAt}
-                />
-              ))}
-            </VStack>
-          )}
+          <UserPostsContainer userId={userId!} />
         </Box>
       </VStack>
     </Flex>

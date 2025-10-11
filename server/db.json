@@ -60,7 +60,7 @@
       "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760189547/dlguhgkq9jvuhriuhlss.webp",
       "caption": "Hijhgvhjn",
       "location": "Faridabad, Haryana, India",
-      "likes": 1,
+      "likes": 2,
       "createdAt": "2025-10-11T13:32:27.411Z",
       "id": 2
     }
@@ -119,20 +119,44 @@
       "text": "sdef",
       "createdAt": "2025-10-11T13:27:47.175Z",
       "id": 6
-    }
-  ],
-  "likes": [
+    },
     {
       "postId": 1,
       "userId": 1,
-      "createdAt": "2025-10-11T12:28:15.258Z",
-      "id": 1
+      "username": "mountain_explorer",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "text": "Hiii",
+      "createdAt": "2025-10-11T16:40:16.220Z",
+      "id": 7
     },
+    {
+      "postId": 1,
+      "userId": 1,
+      "username": "mountain_explorer",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "text": "hjihugv",
+      "createdAt": "2025-10-11T16:41:51.709Z",
+      "id": 8
+    }
+  ],
+  "likes": [
     {
       "postId": 2,
       "userId": 2,
       "createdAt": "2025-10-11T13:32:38.754Z",
       "id": 2
+    },
+    {
+      "postId": 1,
+      "userId": 1,
+      "createdAt": "2025-10-11T16:04:44.612Z",
+      "id": 3
+    },
+    {
+      "postId": 2,
+      "userId": 1,
+      "createdAt": "2025-10-11T16:11:46.954Z",
+      "id": 4
     }
   ],
   "sharedPosts": [

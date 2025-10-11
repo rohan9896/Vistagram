@@ -17,7 +17,7 @@ const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const loggedInUser = useAppSelector((user) => user.user);
-  const { handleLogout, isLogoutLoading } = useLogin();
+  const { handleLogout, isLogoutLoading, navigateToLogin } = useLogin();
 
   return (
     <Box bg="white" px={4} boxShadow="sm">
@@ -28,34 +28,38 @@ const Navbar = () => {
         maxW="1200px"
         mx="auto"
       >
-        <Text
-          fontSize="lg"
-          fontWeight="bold"
-          color="vistagram.500"
-          cursor="pointer"
-        >
-          Vistagram
-        </Text>
+        <Link href="/">
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            color="vistagram.500"
+            cursor="pointer"
+          >
+            Vistagram
+          </Text>
+        </Link>
 
-        <HStack
-          as="nav"
-          spacing={4}
-          display={{ base: "none", md: "flex" }}
-          fontWeight="medium"
-        >
-          <Link
-            href="/home"
-            _hover={{ textDecoration: "none", color: "gray.600" }}
+        {!!loggedInUser.isLoggedIn && (
+          <HStack
+            as="nav"
+            spacing={4}
+            display={{ base: "none", md: "flex" }}
+            fontWeight="medium"
           >
-            Home
-          </Link>
-          <Link
-            href={`/profile/${loggedInUser.user?.id}`}
-            _hover={{ textDecoration: "none", color: "gray.600" }}
-          >
-            Profile
-          </Link>
-        </HStack>
+            <Link
+              href="/home"
+              _hover={{ textDecoration: "none", color: "gray.600" }}
+            >
+              Home
+            </Link>
+            <Link
+              href={`/profile/${loggedInUser.user?.id}`}
+              _hover={{ textDecoration: "none", color: "gray.600" }}
+            >
+              Profile
+            </Link>
+          </HStack>
+        )}
 
         <IconButton
           size="md"
@@ -69,7 +73,7 @@ const Navbar = () => {
           size="sm"
           colorScheme="vistagram"
           display={{ base: "none", md: "inline-flex" }}
-          onClick={loggedInUser.isLoggedIn ? handleLogout : undefined}
+          onClick={loggedInUser.isLoggedIn ? handleLogout : navigateToLogin}
           isLoading={loggedInUser.isLoggedIn && isLogoutLoading}
           loadingText="Logging out..."
         >
@@ -80,32 +84,29 @@ const Navbar = () => {
       {isOpen && (
         <Box pb={4} display={{ md: "none" }}>
           <VStack as="nav" spacing={4} align="start" fontWeight="medium">
-            <Link
-              href="/"
-              _hover={{ textDecoration: "none", color: "gray.600" }}
-              onClick={onClose}
-            >
-              Home
-            </Link>
-            <Link
-              href="/explore"
-              _hover={{ textDecoration: "none", color: "gray.600" }}
-              onClick={onClose}
-            >
-              Explore
-            </Link>
-            <Link
-              href={`/profile/${loggedInUser.user?.id}`}
-              _hover={{ textDecoration: "none", color: "gray.600" }}
-              onClick={onClose}
-            >
-              Profile
-            </Link>
+            {!!loggedInUser.isLoggedIn && (
+              <>
+                <Link
+                  href="/"
+                  _hover={{ textDecoration: "none", color: "gray.600" }}
+                  onClick={onClose}
+                >
+                  Home
+                </Link>
+                <Link
+                  href={`/profile/${loggedInUser.user?.id}`}
+                  _hover={{ textDecoration: "none", color: "gray.600" }}
+                  onClick={onClose}
+                >
+                  Profile
+                </Link>
+              </>
+            )}
             <Button
               size="sm"
               colorScheme="vistagram"
               w="full"
-              onClick={loggedInUser.isLoggedIn ? handleLogout : onClose}
+              onClick={loggedInUser.isLoggedIn ? handleLogout : navigateToLogin}
               isLoading={loggedInUser.isLoggedIn && isLogoutLoading}
               loadingText="Logging out..."
             >

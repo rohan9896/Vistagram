@@ -17,6 +17,7 @@ import {
   Button,
   useDisclosure,
   useToast,
+  Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
@@ -36,32 +37,28 @@ import {
   useCreateSharedPostMutation,
 } from "../store/features/api/apiSlice";
 import { useAppSelector } from "../store/store";
-import type { Comment as ApiComment } from "../models";
+import type { Comment as ApiComment, Post } from "../models";
+import { formatTimestamp } from "../utils";
 
 interface IPostComponentProps {
-  postId: number;
-  username: string;
-  location: string;
-  userAvatar: string;
-  imageUrl: string;
-  caption: string;
-  initialLikes: number;
-  timestamp: string;
-  isLikedByUser?: boolean;
+  post: Post;
+  // timestamp: string;
 }
 
-const PostComponent = (props: IPostComponentProps) => {
+const PostCard = (props: IPostComponentProps) => {
+  const { post } = props;
   const {
-    postId,
+    id: postId,
     username,
+    userId,
     location,
     userAvatar,
     imageUrl,
     caption,
-    initialLikes,
-    timestamp,
+    createdAt,
+    likes: initialLikes,
     isLikedByUser = false,
-  } = props;
+  } = post;
 
   const [isLiked, setIsLiked] = useState(isLikedByUser);
   const [likeCount, setLikeCount] = useState(initialLikes);
@@ -249,9 +246,12 @@ const PostComponent = (props: IPostComponentProps) => {
             borderColor="vistagram.500"
           />
           <VStack align="start" spacing={0}>
-            <Text fontSize="sm" fontWeight="semibold" color="gray.800">
-              {username}
-            </Text>
+            {`/profile/${userId}`}
+            <Link href={`/profile/${userId}`}>
+              <Text fontSize="sm" fontWeight="semibold" color="gray.800">
+                {username}
+              </Text>
+            </Link>
             <HStack spacing={1}>
               <MdLocationOn size={12} color="gray.500" />
               <Text fontSize="xs" color="gray.500">
@@ -359,7 +359,7 @@ const PostComponent = (props: IPostComponentProps) => {
         </Text>
 
         <Text fontSize="xs" color="gray.400" mt={1}>
-          {timestamp}
+          {formatTimestamp(createdAt)}
         </Text>
       </Box>
 
@@ -392,4 +392,4 @@ const PostComponent = (props: IPostComponentProps) => {
   );
 };
 
-export { PostComponent };
+export { PostCard };

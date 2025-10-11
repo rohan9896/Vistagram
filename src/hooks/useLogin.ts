@@ -5,9 +5,11 @@ import {
 } from "../store/features/api/apiSlice";
 import { useAppDispatch } from "../store/store";
 import { logout as logoutAction } from "../store/features/auth/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export function useLogin() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [login, { isLoading: isLoginLoading, error: loginError }] =
     useLoginMutation();
   const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
@@ -15,6 +17,8 @@ export function useLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
+  const navigateToLogin = () => navigate("/login", { replace: true });
 
   const handleLogin = async (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -32,7 +36,6 @@ export function useLogin() {
   const handleLogout = async () => {
     try {
       await logout().unwrap();
-      // Dispatch Redux logout action to update local state
       dispatch(logoutAction());
     } catch (error) {
       console.error("Logout failed:", error);
@@ -56,5 +59,7 @@ export function useLogin() {
     isLogoutLoading,
 
     isLoading: isLoginLoading || isLogoutLoading,
+
+    navigateToLogin,
   };
 }

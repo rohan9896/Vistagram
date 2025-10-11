@@ -223,13 +223,18 @@ export const apiSlice = createApi({
         };
       },
     }),
-    getPostsByUserId: builder.query<Post[], string>({
-      query: (userId) => ({
+    getPostsByUserId: builder.query<
+      Post[],
+      { userId: string; page?: number; limit?: number }
+    >({
+      query: ({ userId, page = 1, limit = 10 }) => ({
         url: "/posts",
         params: {
           userId,
           _sort: "createdAt",
           _order: "desc",
+          _page: page,
+          _limit: limit,
         },
       }),
       transformErrorResponse: (response: any) => {

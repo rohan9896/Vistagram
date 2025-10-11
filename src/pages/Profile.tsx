@@ -1,31 +1,12 @@
-import {
-  Box,
-  Container,
-  Flex,
-  VStack,
-  Heading,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, VStack, Heading, Text } from "@chakra-ui/react";
 import { UserCard } from "../components";
 import { useAppSelector } from "../store/store";
 
 const Profile = () => {
   const user = useAppSelector((state) => state.user.user);
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
-  const toast = useToast();
 
-  const handleEditProfile = () => {
-    toast({
-      title: "Edit Profile",
-      description: "Profile editing functionality coming soon!",
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-    });
-  };
-
-  if (!isLoggedIn) {
+  if (!isLoggedIn || !user) {
     return (
       <Container maxW="container.md" py={8}>
         <Flex justify="center" align="center" minH="50vh">
@@ -55,7 +36,7 @@ const Profile = () => {
         </Box>
 
         <Flex justify="center">
-          <UserCard showEditButton={true} onEditClick={handleEditProfile} />
+          <UserCard user={user} />
         </Flex>
 
         {/* Future sections can be added here */}
