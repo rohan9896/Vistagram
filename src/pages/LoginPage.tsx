@@ -22,15 +22,14 @@ import {
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { MdLocationOn, MdCameraAlt } from "react-icons/md";
 import { useLogin } from "../hooks/useLogin";
-import { STATUS } from "../store/features/auth/userSlice";
 
 const LoginPage = () => {
   const {
     email,
     password,
     rememberMe,
-    status,
-    error,
+    isLoginLoading,
+    loginError,
     setEmail,
     setPassword,
     setRememberMe,
@@ -136,10 +135,12 @@ const LoginPage = () => {
                 Log In
               </Heading>
 
-              {status === STATUS.FAILURE && (
+              {loginError && (
                 <Alert status="error" fontSize="sm" py={2} borderRadius="md">
                   <AlertIcon boxSize={4} />
-                  {error}
+                  {"data" in loginError && loginError.data
+                    ? String(loginError.data)
+                    : "Login failed. Please try again."}
                 </Alert>
               )}
 
@@ -163,6 +164,7 @@ const LoginPage = () => {
                   borderColor="gray.200"
                   fontSize="sm"
                   size="lg"
+                  isDisabled={isLoginLoading}
                   _hover={{
                     borderColor: "gray.300",
                   }}
@@ -193,6 +195,7 @@ const LoginPage = () => {
                     bg="gray.50"
                     borderColor="gray.200"
                     fontSize="sm"
+                    isDisabled={isLoginLoading}
                     _hover={{
                       borderColor: "gray.300",
                     }}
@@ -211,6 +214,7 @@ const LoginPage = () => {
                       variant="ghost"
                       size="sm"
                       color="gray.600"
+                      isDisabled={isLoginLoading}
                       _hover={{
                         color: "gray.700",
                       }}
@@ -225,31 +229,21 @@ const LoginPage = () => {
                   colorScheme="vistagram"
                   isChecked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
+                  isDisabled={isLoginLoading}
                 >
                   Remember me
                 </Checkbox>
-                <Link
-                  href="#"
-                  fontSize="sm"
-                  color="vistagram.500"
-                  fontWeight="medium"
-                  _hover={{
-                    color: "vistagram.400",
-                    textDecoration: "underline",
-                  }}
-                >
-                  Forgot?
-                </Link>
               </Flex>
 
               <Button
                 type="submit"
                 colorScheme="vistagram"
-                isLoading={status === STATUS.LOADING}
+                isLoading={isLoginLoading}
                 loadingText="Logging in..."
                 size="lg"
                 fontWeight="bold"
                 mt={2}
+                isDisabled={!email || !password}
               >
                 Log In
               </Button>

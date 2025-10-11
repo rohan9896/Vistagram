@@ -10,9 +10,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { useAppSelector } from "../store/store";
+import { useLogin } from "../hooks/useLogin";
 
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { isLoggedIn } = useAppSelector((user) => user.user);
+  const { handleLogout, isLogoutLoading } = useLogin();
 
   return (
     <Box bg="white" px={4} boxShadow="sm">
@@ -64,8 +69,11 @@ const Navbar = () => {
           size="sm"
           colorScheme="vistagram"
           display={{ base: "none", md: "inline-flex" }}
+          onClick={isLoggedIn ? handleLogout : undefined}
+          isLoading={isLoggedIn && isLogoutLoading}
+          loadingText="Logging out..."
         >
-          Login
+          {isLoggedIn ? "Logout" : "Login"}
         </Button>
       </Flex>
 
@@ -97,9 +105,11 @@ const Navbar = () => {
               size="sm"
               colorScheme="vistagram"
               w="full"
-              onClick={onClose}
+              onClick={isLoggedIn ? handleLogout : onClose}
+              isLoading={isLoggedIn && isLogoutLoading}
+              loadingText="Logging out..."
             >
-              Login
+              {isLoggedIn ? "Logout" : "Login"}
             </Button>
           </VStack>
         </Box>

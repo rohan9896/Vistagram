@@ -7,6 +7,7 @@ import {
 } from "react-redux";
 import persistReducer from "redux-persist/es/persistReducer";
 import storageSession from "redux-persist/lib/storage/session";
+import { apiSlice } from "./features/api/apiSlice";
 
 const persistConfig = {
   key: `STORE_${import.meta.env.VITE_APP_ENV}`,
@@ -15,6 +16,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   user: userReducer,
+  [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -36,7 +38,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(apiSlice.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

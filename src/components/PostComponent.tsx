@@ -25,27 +25,29 @@ import {
   MdLocationOn,
 } from "react-icons/md";
 import { CommentsDrawer, type IComment } from "./PostComment/CommentsDrawer";
+import { useGetCommentsQuery } from "../store/features/api/apiSlice";
+import type { Comment as ApiComment } from "../models";
 
 interface IPostComponentProps {
+  postId: number;
   username: string;
   location: string;
   userAvatar: string;
   imageUrl: string;
   caption: string;
   initialLikes: number;
-  comments: IComment[];
   timestamp: string;
 }
 
 const PostComponent = (props: IPostComponentProps) => {
   const {
+    postId,
     username,
     location,
     userAvatar,
     imageUrl,
     caption,
     initialLikes,
-    comments: commentsArr,
     timestamp,
   } = props;
 
@@ -57,12 +59,30 @@ const PostComponent = (props: IPostComponentProps) => {
     onClose: onShowMoreClose,
   } = useDisclosure();
 
-  const [comments, setComments] = useState<IComment[]>(commentsArr);
   const {
     isOpen: isCommentsOpen,
     onOpen: onCommentsOpen,
     onClose: onCommentsClose,
   } = useDisclosure();
+
+  // Lazy load comments only when comments drawer is opened
+  const {
+    data: apiComments = [],
+    isLoading: isLoadingComments,
+    error: commentsError,
+  } = useGetCommentsQuery(postId, {
+    skip: !isCommentsOpen, // Only fetch when drawer is open
+  });
+
+  // Map API comments to IComment format
+  const comments: IComment[] = apiComments.map((comment: ApiComment) => ({
+    id: comment.id,
+    username: comment.username,
+    avatar: comment.avatar,
+    text: comment.text,
+    timestamp: "Just now", // This will be formatted in CommentsDrawer
+    createdAt: comment.createdAt,
+  }));
 
   const handleLike = () => {
     if (isLiked) {
@@ -74,15 +94,8 @@ const PostComponent = (props: IPostComponentProps) => {
   };
 
   const handleAddComment = (commentText: string) => {
-    const comment: IComment = {
-      id: comments.length + 1,
-      username: "current_user",
-      avatar:
-        "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
-      text: commentText,
-      timestamp: "Just now",
-    };
-    setComments([comment, ...comments]);
+    // TODO: Implement add comment API call
+    console.log("Adding comment:", commentText, "to post:", postId);
   };
 
   const truncatedCaption =
@@ -190,19 +203,18 @@ const PostComponent = (props: IPostComponentProps) => {
           )}
         </Text>
 
-        {comments.length > 0 && (
-          <Text
-            onClick={onCommentsOpen}
-            fontSize="sm"
-            color="gray.500"
-            mt={2}
-            cursor="pointer"
-            _hover={{ color: "gray.600" }}
-          >
-            View all {comments.length}{" "}
-            {comments.length === 1 ? "comment" : "comments"}
-          </Text>
-        )}
+        <Text
+          onClick={onCommentsOpen}
+          fontSize="sm"
+          color="gray.500"
+          mt={2}
+          cursor="pointer"
+          _hover={{ color: "gray.600" }}
+        >
+          {isCommentsOpen && isLoadingComments
+            ? "Loading comments..."
+            : `View comments`}
+        </Text>
 
         <Text fontSize="xs" color="gray.400" mt={1}>
           {timestamp}
@@ -231,6 +243,8 @@ const PostComponent = (props: IPostComponentProps) => {
         onClose={onCommentsClose}
         comments={comments}
         onAddComment={handleAddComment}
+        isLoading={isLoadingComments}
+        error={commentsError}
       />
     </Box>
   );

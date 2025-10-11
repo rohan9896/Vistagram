@@ -1,44 +1,60 @@
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../store/store";
 import {
-  loginStart,
-  loginFailed,
-  loginSuccess,
-} from "../store/features/auth/userSlice";
+  useLoginMutation,
+  useLogoutMutation,
+} from "../store/features/api/apiSlice";
+import { useAppDispatch } from "../store/store";
+import { logout as logoutAction } from "../store/features/auth/userSlice";
 
 export function useLogin() {
   const dispatch = useAppDispatch();
-  const { error, status } = useAppSelector((state) => state.user);
+  const [login, { isLoading: isLoginLoading, error: loginError }] =
+    useLoginMutation();
+  const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleLogin = (e: React.FormEvent<HTMLDivElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
-    dispatch(loginStart());
+    try {
+      await login({ email, password }).unwrap();
+    } catch (error) {
+      console.error("Login failed:", error);
+    } finally {
+      setEmail("");
+      setPassword("");
+      setRememberMe(false);
+    }
+  };
 
-    // TODO: mockng user for now
-    setTimeout(() => {
-      if (email === "test@example.com" && password === "password") {
-        dispatch(loginSuccess({ email }));
-      } else {
-        dispatch(loginFailed("Invalid email or password"));
-      }
-    }, 1000);
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      // Dispatch Redux logout action to update local state
+      dispatch(logoutAction());
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return {
     email,
     password,
     rememberMe,
-    error,
-    status,
 
     setEmail,
     setPassword,
     setRememberMe,
 
     handleLogin,
+    isLoginLoading,
+    loginError,
+
+    handleLogout,
+    isLogoutLoading,
+
+    isLoading: isLoginLoading || isLogoutLoading,
   };
 }

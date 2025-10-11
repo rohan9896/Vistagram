@@ -12,9 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { MdAdd } from "react-icons/md";
 import { CreatePost } from "./CreatePost";
+import { useAppSelector } from "../store/store";
 
 const CreatePostButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const avatar = useAppSelector((state) => state.user.user?.avatar);
 
   return (
     <>
@@ -46,7 +49,7 @@ const CreatePostButton = () => {
           <ModalHeader>Create Post</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreatePost currentUserAvatar="" onSubmit={() => {}} />
+            <CreatePost currentUserAvatar={avatar ?? ""} onSubmit={() => {}} />
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>

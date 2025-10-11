@@ -1,0 +1,421 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "test@example.com",
+      "password": "password",
+      "username": "mountain_explorer",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "email": "user2@example.com",
+      "password": "password123",
+      "username": "travel_enthusiast",
+      "avatar": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "email": "sarah.wilson@example.com",
+      "password": "sarah123",
+      "username": "sarah_wilson",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+      "createdAt": "2024-01-02T10:30:00Z"
+    },
+    {
+      "id": 4,
+      "email": "mike.chen@example.com",
+      "password": "mike456",
+      "username": "mike_chen",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "createdAt": "2024-01-03T14:20:00Z"
+    },
+    {
+      "id": 5,
+      "email": "emma.davis@example.com",
+      "password": "emma789",
+      "username": "emma_davis",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
+      "createdAt": "2024-01-04T09:15:00Z"
+    }
+  ],
+  "posts": [
+    {
+      "id": 1,
+      "userId": 1,
+      "username": "mountain_explorer",
+      "userAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "caption": "The mountains are calling and I must go 🏔️ What an incredible view from the Swiss Alps! The air is so crisp and the scenery is absolutely breathtaking. This is why I love exploring nature.",
+      "location": "Swiss Alps, Switzerland",
+      "likes": 2891,
+      "createdAt": "2024-01-15T08:30:00Z",
+      "updatedAt": "2024-01-15T08:30:00Z"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "username": "travel_enthusiast",
+      "userAvatar": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800",
+      "caption": "Golden hour at the beach 🌅 Nothing beats watching the sunset over crystal clear waters. The colors were absolutely magical tonight!",
+      "location": "Maldives",
+      "likes": 1542,
+      "createdAt": "2024-01-14T18:45:00Z",
+      "updatedAt": "2024-01-14T18:45:00Z"
+    },
+    {
+      "id": 3,
+      "userId": 3,
+      "username": "sarah_wilson",
+      "userAvatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800",
+      "caption": "City lights from above ✨ The view from this rooftop is absolutely stunning. Sometimes you need to see the city from a different perspective to appreciate its beauty.",
+      "location": "New York City, USA",
+      "likes": 892,
+      "createdAt": "2024-01-13T21:20:00Z",
+      "updatedAt": "2024-01-13T21:20:00Z"
+    },
+    {
+      "id": 4,
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "caption": "Morning hike complete! 🥾 The trail was challenging but the reward at the top was worth every step. Nature never fails to amaze me.",
+      "location": "Yosemite National Park, USA",
+      "likes": 1234,
+      "createdAt": "2024-01-12T11:15:00Z",
+      "updatedAt": "2024-01-12T11:15:00Z"
+    },
+    {
+      "id": 5,
+      "userId": 5,
+      "username": "emma_davis",
+      "userAvatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "caption": "Coffee and architecture ☕️ Found this beautiful café in the heart of the old town. The combination of historic architecture and modern coffee culture is perfect.",
+      "location": "Prague, Czech Republic",
+      "likes": 756,
+      "createdAt": "2024-01-11T16:30:00Z",
+      "updatedAt": "2024-01-11T16:30:00Z"
+    },
+    {
+      "id": 6,
+      "userId": 1,
+      "username": "mountain_explorer",
+      "userAvatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "caption": "Desert adventure complete! 🏜️ The silence of the desert is unlike anything else. Spent the night under the stars and it was absolutely magical.",
+      "location": "Sahara Desert, Morocco",
+      "likes": 2103,
+      "createdAt": "2024-01-10T14:20:00Z",
+      "updatedAt": "2024-01-10T14:20:00Z"
+    },
+    {
+      "id": 7,
+      "userId": 2,
+      "username": "travel_enthusiast",
+      "userAvatar": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "caption": "Temple of the morning sun 🌅 Woke up at 4 AM to catch the sunrise at this ancient temple. The spiritual energy here is incredible.",
+      "location": "Angkor Wat, Cambodia",
+      "likes": 1876,
+      "createdAt": "2024-01-09T05:00:00Z",
+      "updatedAt": "2024-01-09T05:00:00Z"
+    },
+    {
+      "id": 8,
+      "userId": 3,
+      "username": "sarah_wilson",
+      "userAvatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+      "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "caption": "Street art discovery 🎨 Found this incredible mural while exploring the city. The artist's work is so vibrant and full of life!",
+      "location": "Berlin, Germany",
+      "likes": 634,
+      "createdAt": "2024-01-08T13:45:00Z",
+      "updatedAt": "2024-01-08T13:45:00Z"
+    },
+    {
+      "caption": "hugvcf",
+      "imageUrl": "https://res.cloudinary.com/drzlvrhxz/image/upload/v1760177087/dcwr4phwwk0upepgn7t9.png",
+      "id": 9
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "postId": 1,
+      "userId": 2,
+      "username": "travel_enthusiast",
+      "avatar": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
+      "text": "Absolutely stunning! The Swiss Alps are on my bucket list. What time of year did you visit?",
+      "createdAt": "2024-01-15T09:15:00Z"
+    },
+    {
+      "id": 2,
+      "postId": 1,
+      "userId": 3,
+      "username": "sarah_wilson",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+      "text": "Wow! The view is incredible. I can almost feel the fresh mountain air from here! 🏔️",
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 3,
+      "postId": 1,
+      "userId": 4,
+      "username": "mike_chen",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "text": "This is why I love hiking! The reward at the top is always worth the effort.",
+      "createdAt": "2024-01-15T11:45:00Z"
+    },
+    {
+      "id": 4,
+      "postId": 2,
+      "userId": 1,
+      "username": "mountain_explorer",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "text": "The Maldives look absolutely paradise! That water is so clear and blue 🌊",
+      "createdAt": "2024-01-14T19:20:00Z"
+    },
+    {
+      "id": 5,
+      "postId": 2,
+      "userId": 5,
+      "username": "emma_davis",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
+      "text": "Golden hour is the best time for photos! This is absolutely beautiful ✨",
+      "createdAt": "2024-01-14T20:10:00Z"
+    },
+    {
+      "id": 6,
+      "postId": 3,
+      "userId": 2,
+      "username": "travel_enthusiast",
+      "avatar": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
+      "text": "NYC skyline never gets old! Which rooftop is this? I'd love to visit.",
+      "createdAt": "2024-01-13T22:00:00Z"
+    },
+    {
+      "id": 7,
+      "postId": 4,
+      "userId": 1,
+      "username": "mountain_explorer",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+      "text": "Yosemite is incredible! Did you make it to Half Dome?",
+      "createdAt": "2024-01-12T12:30:00Z"
+    },
+    {
+      "id": 8,
+      "postId": 4,
+      "userId": 3,
+      "username": "sarah_wilson",
+      "avatar": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
+      "text": "The trail looks challenging but so rewarding! Great shot!",
+      "createdAt": "2024-01-12T13:15:00Z"
+    },
+    {
+      "id": 9,
+      "postId": 5,
+      "userId": 2,
+      "username": "travel_enthusiast",
+      "avatar": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
+      "text": "Prague is such a beautiful city! The architecture is amazing.",
+      "createdAt": "2024-01-11T17:45:00Z"
+    },
+    {
+      "id": 10,
+      "postId": 6,
+      "userId": 4,
+      "username": "mike_chen",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "text": "Desert camping is on my bucket list! How was the temperature at night?",
+      "createdAt": "2024-01-10T15:30:00Z"
+    }
+  ],
+  "likes": [
+    {
+      "id": 1,
+      "postId": 1,
+      "userId": 2,
+      "createdAt": "2024-01-15T09:00:00Z"
+    },
+    {
+      "id": 2,
+      "postId": 1,
+      "userId": 3,
+      "createdAt": "2024-01-15T09:30:00Z"
+    },
+    {
+      "id": 3,
+      "postId": 1,
+      "userId": 4,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 4,
+      "postId": 1,
+      "userId": 5,
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 5,
+      "postId": 2,
+      "userId": 1,
+      "createdAt": "2024-01-14T19:00:00Z"
+    },
+    {
+      "id": 6,
+      "postId": 2,
+      "userId": 3,
+      "createdAt": "2024-01-14T19:15:00Z"
+    },
+    {
+      "id": 7,
+      "postId": 2,
+      "userId": 4,
+      "createdAt": "2024-01-14T19:30:00Z"
+    },
+    {
+      "id": 8,
+      "postId": 2,
+      "userId": 5,
+      "createdAt": "2024-01-14T19:45:00Z"
+    },
+    {
+      "id": 9,
+      "postId": 3,
+      "userId": 1,
+      "createdAt": "2024-01-13T21:30:00Z"
+    },
+    {
+      "id": 10,
+      "postId": 3,
+      "userId": 2,
+      "createdAt": "2024-01-13T21:45:00Z"
+    },
+    {
+      "id": 11,
+      "postId": 3,
+      "userId": 4,
+      "createdAt": "2024-01-13T22:00:00Z"
+    },
+    {
+      "id": 12,
+      "postId": 4,
+      "userId": 1,
+      "createdAt": "2024-01-12T11:30:00Z"
+    },
+    {
+      "id": 13,
+      "postId": 4,
+      "userId": 2,
+      "createdAt": "2024-01-12T11:45:00Z"
+    },
+    {
+      "id": 14,
+      "postId": 4,
+      "userId": 3,
+      "createdAt": "2024-01-12T12:00:00Z"
+    },
+    {
+      "id": 15,
+      "postId": 4,
+      "userId": 5,
+      "createdAt": "2024-01-12T12:15:00Z"
+    },
+    {
+      "id": 16,
+      "postId": 5,
+      "userId": 1,
+      "createdAt": "2024-01-11T16:45:00Z"
+    },
+    {
+      "id": 17,
+      "postId": 5,
+      "userId": 2,
+      "createdAt": "2024-01-11T17:00:00Z"
+    },
+    {
+      "id": 18,
+      "postId": 5,
+      "userId": 3,
+      "createdAt": "2024-01-11T17:15:00Z"
+    },
+    {
+      "id": 19,
+      "postId": 6,
+      "userId": 2,
+      "createdAt": "2024-01-10T14:30:00Z"
+    },
+    {
+      "id": 20,
+      "postId": 6,
+      "userId": 3,
+      "createdAt": "2024-01-10T14:45:00Z"
+    },
+    {
+      "id": 21,
+      "postId": 6,
+      "userId": 4,
+      "createdAt": "2024-01-10T15:00:00Z"
+    },
+    {
+      "id": 22,
+      "postId": 6,
+      "userId": 5,
+      "createdAt": "2024-01-10T15:15:00Z"
+    },
+    {
+      "id": 23,
+      "postId": 7,
+      "userId": 1,
+      "createdAt": "2024-01-09T05:15:00Z"
+    },
+    {
+      "id": 24,
+      "postId": 7,
+      "userId": 3,
+      "createdAt": "2024-01-09T05:30:00Z"
+    },
+    {
+      "id": 25,
+      "postId": 7,
+      "userId": 4,
+      "createdAt": "2024-01-09T05:45:00Z"
+    },
+    {
+      "id": 26,
+      "postId": 7,
+      "userId": 5,
+      "createdAt": "2024-01-09T06:00:00Z"
+    },
+    {
+      "id": 27,
+      "postId": 8,
+      "userId": 1,
+      "createdAt": "2024-01-08T14:00:00Z"
+    },
+    {
+      "id": 28,
+      "postId": 8,
+      "userId": 2,
+      "createdAt": "2024-01-08T14:15:00Z"
+    },
+    {
+      "id": 29,
+      "postId": 8,
+      "userId": 4,
+      "createdAt": "2024-01-08T14:30:00Z"
+    },
+    {
+      "id": 30,
+      "postId": 8,
+      "userId": 5,
+      "createdAt": "2024-01-08T14:45:00Z"
+    }
+  ]
+}

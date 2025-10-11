@@ -1,0 +1,9 @@
+{
+  "/api/auth/login": "/login",
+  "/api/auth/logout": "/logout",
+  "/api/auth/me": "/me",
+  "/api/users": "/users",
+  "/api/posts": "/posts",
+  "/api/comments": "/comments",
+  "/api/likes": "/likes"
+}

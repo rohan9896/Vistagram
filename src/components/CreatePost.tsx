@@ -6,22 +6,35 @@ import {
   IconButton,
   Image,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { MdClose, MdImage, MdCameraAlt } from "react-icons/md";
+import { useAppSelector } from "../store/store";
+import {
+  useUploadImageToCloudinaryMutation,
+  useCreatePostMutation,
+} from "../store/features/api/apiSlice";
 
 const CreatePost = ({
-  onSubmit,
+  onSuccess,
   currentUserAvatar = "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=150",
 }: {
-  onSubmit: () => void;
-  currentUserAvatar: string;
+  onSuccess?: () => void;
+  currentUserAvatar?: string;
 }) => {
   const [caption, setCaption] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+
+  const userId = useAppSelector((state) => state.user.user?.id);
+  const toast = useToast();
+
+  const [uploadImageToCloudinary] = useUploadImageToCloudinaryMutation();
+  const [createPost] = useCreatePostMutation();
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -68,18 +81,65 @@ const CreatePost = ({
     }
   };
 
-  const handleSubmit = () => {
-    if (caption.trim() || selectedImage) {
-      // onSubmit({ caption, image: selectedImage });
-      setCaption("");
-      setSelectedImage(null);
-      setImagePreview(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-      if (cameraInputRef.current) {
-        cameraInputRef.current.value = "";
-      }
+  const resetForm = () => {
+    setCaption("");
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    if (cameraInputRef.current) {
+      cameraInputRef.current.value = "";
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedImage || !caption.trim()) {
+      toast({
+        title: "Missing required fields",
+        description: "Please add both an image and caption",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      // Upload image to Cloudinary
+      const uploadResult = await uploadImageToCloudinary(
+        selectedImage
+      ).unwrap();
+
+      // Create post with the uploaded image URL
+      await createPost({
+        caption: caption.trim(),
+        imageUrl: uploadResult.url,
+      }).unwrap();
+
+      toast({
+        title: "Post created successfully!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      resetForm();
+      onSuccess?.();
+    } catch (error: any) {
+      console.error("Error creating post:", error);
+      toast({
+        title: "Failed to create post",
+        description:
+          error?.data?.message || "Something went wrong. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -180,7 +240,9 @@ const CreatePost = ({
               size="sm"
               borderRadius="full"
               px={6}
-              isDisabled={!caption.trim() && !selectedImage}
+              isDisabled={!selectedImage || !caption.trim() || isUploading}
+              isLoading={isUploading}
+              loadingText="Posting..."
               onClick={handleSubmit}
             >
               Post

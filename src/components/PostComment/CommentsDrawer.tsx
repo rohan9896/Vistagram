@@ -15,6 +15,8 @@ import {
   InputRightElement,
   Text,
   VStack,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Comment, type ICommentProps } from "./Comment";
@@ -22,6 +24,7 @@ import { MdSend } from "react-icons/md";
 
 export interface IComment extends ICommentProps {
   id: number;
+  createdAt: string;
 }
 
 interface ICommentsDrawerProps {
@@ -29,12 +32,33 @@ interface ICommentsDrawerProps {
   onClose: () => void;
   comments: IComment[];
   onAddComment: (comment: string) => void;
+  isLoading?: boolean;
+  error?: any;
 }
 
 const CommentsDrawer = (props: ICommentsDrawerProps) => {
-  const { isOpen, onClose, comments, onAddComment } = props;
+  const { isOpen, onClose, comments, onAddComment, isLoading, error } = props;
 
   const [newComment, setNewComment] = useState("");
+
+  // Helper function to format timestamp
+  const formatTimestamp = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    );
+
+    if (diffInHours < 1) return "Just now";
+    if (diffInHours < 24)
+      return `${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7)
+      return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+
+    return date.toLocaleDateString();
+  };
 
   const handleAddComment = () => {
     if (newComment.trim()) {
@@ -62,17 +86,39 @@ const CommentsDrawer = (props: ICommentsDrawerProps) => {
         </DrawerHeader>
 
         <DrawerBody px={0}>
-          <VStack spacing={0} align="stretch" divider={<Divider />}>
-            {comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                username={comment.username}
-                avatar={comment.avatar}
-                text={comment.text}
-                timestamp={comment.timestamp}
-              />
-            ))}
-          </VStack>
+          {isLoading ? (
+            <Center py={8}>
+              <VStack spacing={4}>
+                <Spinner size="lg" color="vistagram.500" />
+                <Text color="gray.600">Loading comments...</Text>
+              </VStack>
+            </Center>
+          ) : error ? (
+            <Center py={8}>
+              <Text color="red.500">
+                Failed to load comments. Please try again.
+              </Text>
+            </Center>
+          ) : (
+            <VStack spacing={0} align="stretch" divider={<Divider />}>
+              {comments.map((comment) => (
+                <Comment
+                  key={comment.id}
+                  username={comment.username}
+                  avatar={comment.avatar}
+                  text={comment.text}
+                  timestamp={formatTimestamp(comment.createdAt)}
+                />
+              ))}
+              {comments.length === 0 && (
+                <Center py={8}>
+                  <Text color="gray.500">
+                    No comments yet. Be the first to comment!
+                  </Text>
+                </Center>
+              )}
+            </VStack>
+          )}
 
           <Box
             position="sticky"
