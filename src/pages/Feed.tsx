@@ -41,7 +41,7 @@ const Feed = () => {
           />
         </Box>
 
-        <AllPostsContainer onPostsRefresh={handlePostCreated} />
+        <AllPostsContainer />
       </VStack>
 
       <CreatePostButton />

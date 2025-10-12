@@ -3,11 +3,7 @@ import { PostList } from "./PostList";
 import { useGetPostsQuery } from "../../store/features/api/apiSlice";
 import type { Post } from "../../models";
 
-interface AllPostsContainerProps {
-  onPostsRefresh?: () => void;
-}
-
-const AllPostsContainer = ({ onPostsRefresh }: AllPostsContainerProps) => {
+const AllPostsContainer = () => {
   const [page, setPage] = useState(1);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
 
@@ -47,20 +43,17 @@ const AllPostsContainer = ({ onPostsRefresh }: AllPostsContainerProps) => {
   const handleRefresh = () => {
     setPage(1);
     refetch();
-    onPostsRefresh?.();
   };
 
   // Expose refresh function for parent components
   useEffect(() => {
-    if (onPostsRefresh) {
-      (window as any).postListRefresh = handleRefresh;
-    }
+    (window as any).postListRefresh = handleRefresh;
     return () => {
       if ((window as any).postListRefresh) {
         delete (window as any).postListRefresh;
       }
     };
-  }, [onPostsRefresh]);
+  }, []);
 
   return (
     <PostList

@@ -63,6 +63,116 @@
       "likes": 2,
       "createdAt": "2025-10-11T13:32:27.411Z",
       "id": 2
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760241287/wf6g2wm5gaxhwcduvmg0.jpg",
+      "caption": "Hello from camera",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T03:54:47.933Z",
+      "id": 3
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760241322/zys1tv7ylgadpa2gqlsv.webp",
+      "caption": "Believe",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T03:55:22.852Z",
+      "id": 4
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760241337/ictezzuettx6kaatq5xu.png",
+      "caption": "Test123",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T03:55:38.069Z",
+      "id": 5
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760241354/lqopwxsfegcwwdobaqia.png",
+      "caption": "Mermaid",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T03:55:55.180Z",
+      "id": 6
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "https://res.cloudinary.com/drzlvrhxz/image/upload/v1760241451/mtqbvhejd0074ysl9v2t.webp",
+      "caption": "heyy vistagram",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T03:57:32.462Z",
+      "id": 7
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "https://res.cloudinary.com/drzlvrhxz/image/upload/v1760241535/v75fp6sjxqewvw36rvm2.jpg",
+      "caption": "DB Indexes",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T03:58:55.716Z",
+      "id": 8
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "https://res.cloudinary.com/drzlvrhxz/image/upload/v1760241645/dcbhq9ji36zrilejlmr7.jpg",
+      "caption": "Stonks",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T04:00:45.780Z",
+      "id": 9
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760241735/lpnimvqhrbcdlspkqher.png",
+      "caption": "bdcjcbjss",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T04:02:16.673Z",
+      "id": 10
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760241889/swklr6gfr3kjwonq3dsr.png",
+      "caption": "hbgvfgv",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T04:04:51.272Z",
+      "id": 11
+    },
+    {
+      "userId": 4,
+      "username": "mike_chen",
+      "userAvatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "imageUrl": "http://res.cloudinary.com/drzlvrhxz/image/upload/v1760242151/kcbfbvczoymuecsdjwrj.gif",
+      "caption": "GIF test",
+      "location": "Faridabad, Haryana, India",
+      "likes": 0,
+      "createdAt": "2025-10-12T04:09:12.483Z",
+      "id": 12
     }
   ],
   "comments": [
@@ -137,6 +247,15 @@
       "text": "hjihugv",
       "createdAt": "2025-10-11T16:41:51.709Z",
       "id": 8
+    },
+    {
+      "postId": 12,
+      "userId": 4,
+      "username": "mike_chen",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+      "text": "Nice",
+      "createdAt": "2025-10-12T04:09:24.283Z",
+      "id": 9
     }
   ],
   "likes": [
