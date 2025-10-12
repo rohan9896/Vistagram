@@ -200,6 +200,10 @@ The built files will be in the `dist/` directory, ready for deployment.
 
 **Choice:** Cloudinary handles image optimization, transformations, and CDN delivery without requiring server-side file management or storage infrastructure.
 
+## Location Services: OpenStreetMap API
+
+**Choice:** OpenStreetMap API provides free reverse geocoding to convert latitude/longitude coordinates into human-readable addresses without API key requirements.
+
 ## Development Server: Vite over Create React App
 
 **Choice:** Vite offers faster hot module replacement, optimized build times, and modern ES modules support for improved development experience.
@@ -207,6 +211,50 @@ The built files will be in the `dist/` directory, ready for deployment.
 ## Type Safety: TypeScript
 
 **Choice:** TypeScript provides compile-time error detection, better IDE support, and improved code maintainability for larger React applications.
+
+---
+
+# Features & Design Patterns
+
+## UI/UX Features
+
+### Infinite Scroll Pagination
+
+**Implementation:** Load-more button pattern with automatic pagination for post listings, preventing performance issues with large datasets while maintaining user control.
+
+### Optimistic UI Updates
+
+**Implementation:** Immediate like/unlike feedback with rollback on failure, providing instant user interaction response while handling network delays gracefully.
+
+### Real-time Location Services
+
+**Implementation:** Automatic geolocation detection with OpenStreetMap reverse geocoding for human-readable addresses in post creation workflow.
+
+### Progressive Image Loading
+
+**Implementation:** Image preview during upload with loading states, ensuring smooth user experience during file processing and network operations.
+
+### Share with Clipboard Integration
+
+**Implementation:** One-click post sharing that generates shareable URLs (with no auth reqired) and automatically copies them to clipboard, with fallback toast notifications for unsupported browsers.
+
+## Design Patterns
+
+### Container-Presentation Pattern
+
+**Implementation:** `AllPostsContainer` handles data fetching and state management while `PostList` focuses purely on rendering, ensuring clear separation of concerns.
+
+### Custom Hooks Pattern
+
+**Implementation:** `useLogin` hook encapsulates authentication logic, form state, and navigation, promoting reusability and cleaner component code.
+
+### Compound Component Pattern
+
+**Implementation:** Modal and drawer components with disclosure hooks, providing flexible and composable UI building blocks with consistent behavior.
+
+### Utility-First Helpers
+
+**Implementation:** Centralized utility functions like `formatTimestamp` for consistent data formatting across components, promoting code reuse and maintainability.
 
 ---
 
