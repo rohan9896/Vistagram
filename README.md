@@ -242,7 +242,7 @@ The built files will be in the `dist/` directory, ready for deployment.
 
 ### Container-Presentation Pattern
 
-**Implementation:** `AllPostsContainer` handles data fetching and state management while `PostList` focuses purely on rendering, ensuring clear separation of concerns.
+**Implementation:** `AllPostsContainer` and `UserPostContainer` handles data fetching and state management while `PostList` focuses purely on rendering, ensuring clear separation of concerns.
 
 ### Custom Hooks Pattern
 
@@ -260,7 +260,7 @@ The built files will be in the `dist/` directory, ready for deployment.
 
 # API Documentation
 
-Base URL: `http://localhost:3000`
+Base URL: `http://localhost:3000` / `https://vistagram-u1um.onrender.com`
 
 ## Authentication
 
