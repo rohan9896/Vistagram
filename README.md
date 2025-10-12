@@ -139,6 +139,16 @@ The project uses JSON Server with a `server/db.json` file as the database. The d
 - **likes** - Post likes
 - **sharedPosts** - Shared post references
 
+### ⚠️ Data Persistence Notice
+
+**Important**: This demo uses an in-memory JSON Server deployed on Render's free plan. Due to the following limitations, newly created data may not persist:
+
+- **Server Sleep**: Render free tier puts inactive services to sleep after 15 minutes of inactivity
+- **Memory Reset**: When the server restarts, it resets to the original `db.json` state
+- **Data Loss**: Any posts, comments, or likes created during your session will be lost when the server goes to sleep
+
+**For Local Development**: When running locally with `npm run json-server`, all data persists normally to your local `server/db.json` file.
+
 ## Features
 
 - **Authentication** - JWT-based user authentication
