@@ -2,6 +2,10 @@
 
 This guide will help you set up the Vistagram project locally. The project consists of a React Vite SPA frontend and a JSON Server backend.
 
+## Testing Credentials
+Email: test@example.com
+Password: password
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
