@@ -29,14 +29,21 @@ const AllPostsContainer = () => {
       if (page === 1) {
         setAllPosts(postsData);
       } else {
-        setAllPosts((prev) => [...prev, ...postsData]);
+        setAllPosts((prev) => {
+          const newPosts = [...prev, ...postsData];
+          return newPosts;
+        });
       }
     }
   }, [postsData, page]);
 
   const loadMorePosts = () => {
     if (!isFetching && postsData && postsData.length === 10) {
-      setPage((prev) => prev + 1);
+      setPage((prev) => {
+        const nextPage = prev + 1;
+        console.log("Setting page to:", nextPage);
+        return nextPage;
+      });
     }
   };
 

@@ -30,6 +30,8 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
+  // Disable caching globally
+  keepUnusedDataFor: 0,
   refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginCredentials>({

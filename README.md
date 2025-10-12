@@ -260,7 +260,7 @@ The built files will be in the `dist/` directory, ready for deployment.
 
 # API Documentation
 
-Base URL: `http://localhost:3000` / `https://vistagram-u1um.onrender.com`
+Base URL: `http://localhost:3000` / `https://vistagram-pkne.onrender.com`
 
 ## Authentication
 
